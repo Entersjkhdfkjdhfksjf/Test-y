@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle, #141414 0%, #000000 100%);
+            height: 100vh;
+            overflow: hidden;
+            color: #c3c3c3;
+        }
+
+        .dashboard {
+            height: calc(100vh - 70px);
+            padding: 20px;
+            position: relative;
+        }
+
+        .tile {
+            width: 160px;
+            height: 160px;
+            display: inline-block;
+            margin: 10px;
+            background: rgba(50, 50, 50, 0.6);
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 20px;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .tile:hover {
+            background: rgba(80, 80, 80, 0.6);
+            transform: scale(1.05);
+        }
+
+        .tile-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+            color: #9b9b9b;
+        }
+
+        .tile-text {
+            font-size: 14px;
+            text-align: center;
+            color: #c3c3c3;
+        }
+
+        .sidebar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .sidebar-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .sidebar-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-btn span {
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .window {
+            position: absolute;
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            min-width: 600px;
+            min-height: 400px;
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .window-header {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+
+        .window-title {
+            font-weight: 500;
+        }
+
+        .window-controls span {
+            margin-left: 15px;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .window-controls span:hover {
+            opacity: 1;
+        }
+
+        .window-content {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 150px);
+        }
+
+        .window-content h2 {
+            margin-bottom: 15px;
+            color: #4a9eff;
+        }
+
+        .window-content p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .window-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .window-content li {
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            display: flex;
+            margin: 20px 0;
+            padding: 20px 0;
+            overflow-x: auto;
+        }
+
+        .timeline-event {
+            min-width: 200px;
+            margin-right: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .stat-box {
+            background: rgba(74, 158, 255, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 3px solid #4a9eff;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="tile" onclick="openWindow('overview')">
+            <div class="tile-icon">📜</div>
+            <div class="tile-text">Overview</div>
+        </div>
+        <div class="tile" onclick="openWindow('casualties')">
+            <div class="tile-icon">📊</div>
+            <div class="tile-text">Casualties</div>
+        </div>
+        <div class="tile" onclick="openWindow('timeline')">
+            <div class="tile-icon">⏱️</div>
+            <div class="tile-text">Timeline</div>
+        </div>
+        <div class="tile" onclick="openWindow('legacy')">
+            <div class="tile-icon">🏛️</div>
+            <div class="tile-text">Legacy</div>
+        </div>
+
+        <!-- Windows -->
+        <div class="window" id="overview-window">
+            <div class="window-header">
+                <div class="window-title">World War I Overview</div>
+                <div class="window-controls">
+                    <span onclick="closeWindow('overview')">✕</span>
+                </div>
+            </div>
+            <div class="window-content">
+                <h2>The Great War (1914-1918)</h2>
+                <p>World War I was one of the largest and deadliest conflicts in human history, fundamentally changing the global political landscape and society at large.</p>
+                <div class="stat-box">
+                    <p>⚔️ 32 Nations Involved</p>
+                    <p>🌍 4 Continents Affected</p>
+                    <p>⏱️ 4 Years, 3 Months, 2 Weeks Duration</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="casualties-window">
+            <div class="window-header">
+                <div class="window-title">War Casualties</div>
+                <div class="window-controls">
+                    <span onclick="closeWindow('casualties')">✕</span>
+                </div>
+            </div>
+            <div class="window-content">
+                <h2>Human Cost of the War</h2>
+                <div class="stat-box">
+                    <p>Military Deaths: ~9.7 million</p>
+                    <p>Civilian Deaths: ~10 million</p>
+                    <p>Total Wounded: ~21 million</p>
+                </div>
+                <p>The war represented an unprecedented scale of human loss, introducing new forms of warfare and weapons that led to mass casualties.</p>
+            </div>
+        </div>
+
+        <div class="window" id="timeline-window">
+            <div class="window-header">
+                <div class="window-title">War Timeline</div>
+                <div class="window-controls">
+                    <span onclick="closeWindow('timeline')">✕</span>
+                </div>
+            </div>
+            <div class="window-content">
+                <h2>Key Events</h2>
+                <div class="timeline">
+                    <div class="timeline-event">
+                        <h3>1914</h3>
+                        <p>Assassination of Archduke Franz Ferdinand</p>
+                        <p>Declaration of War</p>
+                    </div>
+                    <div class="timeline-event">
+                        <h3>1915</h3>
+                        <p>Battle of Gallipoli</p>
+                        <p>First use of poison gas</p>
+                    </div>
+                    <div class="timeline-event">
+                        <h3>1916</h3>
+                        <p>Battle of Verdun</p>
+                        <p>Battle of the Somme</p>
+                    </div>
+                    <div class="timeline-event">
+                        <h3>1917</h3>
+                        <p>U.S. enters the war</p>
+                        <p>Russian Revolution</p>
+                    </div>
+                    <div class="timeline-event">
+                        <h3>1918</h3>
+                        <p>Armistice Day</p>
+                        <p>Treaty of Versailles</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="legacy-window">
+            <div class="window-header">
+                <div class="window-title">War Legacy</div>
+                <div class="window-controls">
+                    <span onclick="closeWindow('legacy')">✕</span>
+                </div>
+            </div>
+            <div class="window-content">
+                <h2>Lasting Impact</h2>
+                <ul>
+                    <li>Creation of the League of Nations</li>
+                    <li>Redrawing of national boundaries</li>
+                    <li>Rise of new military technologies</li>
+                    <li>Women's suffrage movement acceleration</li>
+                    <li>Social and political reforms</li>
+                </ul>
+                <div class="stat-box">
+                    <p>4 Empires Collapsed</p>
+                    <p>New Nations Created</p>
+                    <p>Global Power Shift</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-btn">
+            <span class="material-icons">menu</span>
+            <span>Start</span>
+        </div>
+        <div class="sidebar-btn">
+            <span class="material-icons">search</span>
+            <span>Search</span>
+        </div>
+        <div class="sidebar-btn">
+            <span class="material-icons">settings</span>
+            <span>Settings</span>
+        </div>
+    </div>
+
+    <script>
+        // Make windows draggable
+        let windows = document.querySelectorAll('.window');
+        windows.forEach(makeWindowDraggable);
+
+        function makeWindowDraggable(element) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            element.querySelector('.window-header').onmousedown = dragMouseDown;
+
+            function dragMouseDown(e) {
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        // Window management
+        function openWindow(id) {
+            const window = document.getElementById(id + '-window');
+            if (!window.style.display || window.style.display === 'none') {
+                window.style.display = 'block';
+                if (!window.style.top && !window.style.left) {
+                    window.style.top = '50px';
+                    window.style.left = '50px';
+                }
+            }
+            bringToFront(window);
+        }
+
+        function closeWindow(id) {
+            document.getElementById(id + '-window').style.display = 'none';
+        }
+
+        function bringToFront(window) {
+            windows.forEach(w => w.style.zIndex = '1');
+            window.style.zIndex = '2';
+        }
+
+        // Initialize windows with random positions
+        windows.forEach(window => {
+            window.style.top = Math.random() * 100 + 50 + 'px';
+            window.style.left = Math.random() * 100 + 50 + 'px';
+        });
+    </script>
+</body>
+</html>
