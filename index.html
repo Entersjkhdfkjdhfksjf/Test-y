@@ -11,28 +11,54 @@
         }
 
         body {
-            background: radial-gradient(circle, #141414 0%, #000000 100%);
+            background: linear-gradient(to right, #1c1c1c, #2c2c2c);
             height: 100vh;
             overflow: hidden;
-            color: #c3c3c3;
+            color: #f0f0f0;
         }
 
-        .dashboard {
-            height: calc(100vh - 70px);
-            padding: 20px;
-            position: relative;
+        .start-menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(28, 28, 28, 0.95);
+            backdrop-filter: blur(10px);
+            display: none;
+            padding: 50px;
+            z-index: 1000;
+        }
+
+        .start-menu-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .start-menu-header img {
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+        }
+
+        .start-menu-header h1 {
+            font-size: 36px;
+            font-weight: 500;
+        }
+
+        .tiles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-gap: 20px;
         }
 
         .tile {
-            width: 160px;
-            height: 160px;
-            display: inline-block;
-            margin: 10px;
             background: rgba(50, 50, 50, 0.6);
             border-radius: 10px;
-            cursor: pointer;
             padding: 20px;
-            transition: transform 0.2s, background 0.2s;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
         }
 
         .tile:hover {
@@ -41,7 +67,7 @@
         }
 
         .tile-icon {
-            font-size: 60px;
+            font-size: 40px;
             margin-bottom: 10px;
             color: #9b9b9b;
         }
@@ -49,25 +75,24 @@
         .tile-text {
             font-size: 14px;
             text-align: center;
-            color: #c3c3c3;
+            color: #f0f0f0;
         }
 
-        .sidebar {
+        .taskbar {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 70px;
-            background: rgba(0, 0, 0, 0.8);
+            height: 50px;
+            background: rgba(28, 28, 28, 0.8);
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
-            justify-content: space-between;
             padding: 0 20px;
-            z-index: 1000;
+            z-index: 900;
         }
 
-        .sidebar-btn {
+        .start-btn {
             display: flex;
             align-items: center;
             padding: 10px 15px;
@@ -75,20 +100,21 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.2s;
+            margin-right: 20px;
         }
 
-        .sidebar-btn:hover {
+        .start-btn:hover {
             background: rgba(255, 255, 255, 0.2);
         }
 
-        .sidebar-btn span {
+        .start-btn span {
             margin-left: 10px;
             font-size: 14px;
         }
 
         .window {
             position: absolute;
-            background: rgba(30, 30, 30, 0.95);
+            background: rgba(28, 28, 28, 0.95);
             border-radius: 10px;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
             min-width: 600px;
@@ -125,7 +151,7 @@
         .window-content {
             padding: 20px;
             overflow-y: auto;
-            max-height: calc(100vh - 150px);
+            max-height: calc(100vh - 100px);
         }
 
         .window-content h2 {
@@ -172,137 +198,136 @@
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <div class="tile" onclick="openWindow('overview')">
-            <div class="tile-icon">📜</div>
-            <div class="tile-text">Overview</div>
+    <div class="start-menu" id="start-menu">
+        <div class="start-menu-header">
+            <img src="/api/placeholder/50/50" alt="Logo">
+            <h1>World War I</h1>
         </div>
-        <div class="tile" onclick="openWindow('casualties')">
-            <div class="tile-icon">📊</div>
-            <div class="tile-text">Casualties</div>
+        <div class="tiles-container">
+            <div class="tile" onclick="openWindow('overview')">
+                <div class="tile-icon">📜</div>
+                <div class="tile-text">Overview</div>
+            </div>
+            <div class="tile" onclick="openWindow('casualties')">
+                <div class="tile-icon">📊</div>
+                <div class="tile-text">Casualties</div>
+            </div>
+            <div class="tile" onclick="openWindow('timeline')">
+                <div class="tile-icon">⏱️</div>
+                <div class="tile-text">Timeline</div>
+            </div>
+            <div class="tile" onclick="openWindow('legacy')">
+                <div class="tile-icon">🏛️</div>
+                <div class="tile-text">Legacy</div>
+            </div>
         </div>
-        <div class="tile" onclick="openWindow('timeline')">
-            <div class="tile-icon">⏱️</div>
-            <div class="tile-text">Timeline</div>
-        </div>
-        <div class="tile" onclick="openWindow('legacy')">
-            <div class="tile-icon">🏛️</div>
-            <div class="tile-text">Legacy</div>
-        </div>
+    </div>
 
-        <!-- Windows -->
-        <div class="window" id="overview-window">
-            <div class="window-header">
-                <div class="window-title">World War I Overview</div>
-                <div class="window-controls">
-                    <span onclick="closeWindow('overview')">✕</span>
-                </div>
-            </div>
-            <div class="window-content">
-                <h2>The Great War (1914-1918)</h2>
-                <p>World War I was one of the largest and deadliest conflicts in human history, fundamentally changing the global political landscape and society at large.</p>
-                <div class="stat-box">
-                    <p>⚔️ 32 Nations Involved</p>
-                    <p>🌍 4 Continents Affected</p>
-                    <p>⏱️ 4 Years, 3 Months, 2 Weeks Duration</p>
-                </div>
+    <div class="taskbar">
+        <div class="start-btn" onclick="toggleStartMenu()">
+            <span class="material-icons">menu</span>
+            <span>Start</span>
+        </div>
+        <!-- Add more taskbar icons here -->
+    </div>
+
+    <!-- Windows -->
+    <div class="window" id="overview-window">
+        <div class="window-header">
+            <div class="window-title">World War I Overview</div>
+            <div class="window-controls">
+                <span onclick="closeWindow('overview')">✕</span>
             </div>
         </div>
-
-        <div class="window" id="casualties-window">
-            <div class="window-header">
-                <div class="window-title">War Casualties</div>
-                <div class="window-controls">
-                    <span onclick="closeWindow('casualties')">✕</span>
-                </div>
-            </div>
-            <div class="window-content">
-                <h2>Human Cost of the War</h2>
-                <div class="stat-box">
-                    <p>Military Deaths: ~9.7 million</p>
-                    <p>Civilian Deaths: ~10 million</p>
-                    <p>Total Wounded: ~21 million</p>
-                </div>
-                <p>The war represented an unprecedented scale of human loss, introducing new forms of warfare and weapons that led to mass casualties.</p>
+        <div class="window-content">
+            <h2>The Great War (1914-1918)</h2>
+            <p>World War I was one of the largest and deadliest conflicts in human history, fundamentally changing the global political landscape and society at large.</p>
+            <div class="stat-box">
+                <p>⚔️ 32 Nations Involved</p>
+                <p>🌍 4 Continents Affected</p>
+                <p>⏱️ 4 Years, 3 Months, 2 Weeks Duration</p>
             </div>
         </div>
+    </div>
 
-        <div class="window" id="timeline-window">
-            <div class="window-header">
-                <div class="window-title">War Timeline</div>
-                <div class="window-controls">
-                    <span onclick="closeWindow('timeline')">✕</span>
-                </div>
-            </div>
-            <div class="window-content">
-                <h2>Key Events</h2>
-                <div class="timeline">
-                    <div class="timeline-event">
-                        <h3>1914</h3>
-                        <p>Assassination of Archduke Franz Ferdinand</p>
-                        <p>Declaration of War</p>
-                    </div>
-                    <div class="timeline-event">
-                        <h3>1915</h3>
-                        <p>Battle of Gallipoli</p>
-                        <p>First use of poison gas</p>
-                    </div>
-                    <div class="timeline-event">
-                        <h3>1916</h3>
-                        <p>Battle of Verdun</p>
-                        <p>Battle of the Somme</p>
-                    </div>
-                    <div class="timeline-event">
-                        <h3>1917</h3>
-                        <p>U.S. enters the war</p>
-                        <p>Russian Revolution</p>
-                    </div>
-                    <div class="timeline-event">
-                        <h3>1918</h3>
-                        <p>Armistice Day</p>
-                        <p>Treaty of Versailles</p>
-                    </div>
-                </div>
+    <div class="window" id="casualties-window">
+        <div class="window-header">
+            <div class="window-title">War Casualties</div>
+            <div class="window-controls">
+                <span onclick="closeWindow('casualties')">✕</span>
             </div>
         </div>
-
-        <div class="window" id="legacy-window">
-            <div class="window-header">
-                <div class="window-title">War Legacy</div>
-                <div class="window-controls">
-                    <span onclick="closeWindow('legacy')">✕</span>
-                </div>
+        <div class="window-content">
+            <h2>Human Cost of the War</h2>
+            <div class="stat-box">
+                <p>Military Deaths: ~9.7 million</p>
+                <p>Civilian Deaths: ~10 million</p>
+                <p>Total Wounded: ~21 million</p>
             </div>
-            <div class="window-content">
-                <h2>Lasting Impact</h2>
-                <ul>
-                    <li>Creation of the League of Nations</li>
-                    <li>Redrawing of national boundaries</li>
-                    <li>Rise of new military technologies</li>
-                    <li>Women's suffrage movement acceleration</li>
-                    <li>Social and political reforms</li>
-                </ul>
-                <div class="stat-box">
-                    <p>4 Empires Collapsed</p>
-                    <p>New Nations Created</p>
-                    <p>Global Power Shift</p>
+            <p>The war represented an unprecedented scale of human loss, introducing new forms of warfare and weapons that led to mass casualties.</p>
+        </div>
+    </div>
+
+    <div class="window" id="timeline-window">
+        <div class="window-header">
+            <div class="window-title">War Timeline</div>
+            <div class="window-controls">
+                <span onclick="closeWindow('timeline')">✕</span>
+            </div>
+        </div>
+        <div class="window-content">
+            <h2>Key Events</h2>
+            <div class="timeline">
+                <div class="timeline-event">
+                    <h3>1914</h3>
+                    <p>Assassination of Archduke Franz Ferdinand</p>
+                    <p>Declaration of War</p>
+                </div>
+                <div class="timeline-event">
+                    <h3>1915</h3>
+                    <p>Battle of Gallipoli</p>
+                    <p>First use of poison gas</p>
+                </div>
+                <div class="timeline-event">
+                    <h3>1916</h3>
+                    <p>Battle of Verdun</p>
+                    <p>Battle of the Somme</p>
+                </div>
+                <div class="timeline-event">
+                    <h3>1917</h3>
+                    <p>U.S. enters the war</p>
+                    <p>Russian Revolution</p>
+                </div>
+                <div class="timeline-event">
+                    <h3>1918</h3>
+                    <p>Armistice Day</p>
+                    <p>Treaty of Versailles</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="sidebar">
-        <div class="sidebar-btn">
-            <span class="material-icons">menu</span>
-            <span>Start</span>
+    <div class="window" id="legacy-window">
+        <div class="window-header">
+            <div class="window-title">War Legacy</div>
+            <div class="window-controls">
+                <span onclick="closeWindow('legacy')">✕</span>
+            </div>
         </div>
-        <div class="sidebar-btn">
-            <span class="material-icons">search</span>
-            <span>Search</span>
-        </div>
-        <div class="sidebar-btn">
-            <span class="material-icons">settings</span>
-            <span>Settings</span>
+        <div class="window-content">
+            <h2>Lasting Impact</h2>
+            <ul>
+                <li>Creation of the League of Nations</li>
+                <li>Redrawing of national boundaries</li>
+                <li>Rise of new military technologies</li>
+                <li>Women's suffrage movement acceleration</li>
+                <li>Social and political reforms</li>
+            </ul>
+            <div class="stat-box">
+                <p>4 Empires Collapsed</p>
+                <p>New Nations Created</p>
+                <p>Global Power Shift</p>
+            </div>
         </div>
     </div>
 
@@ -359,6 +384,16 @@
         function bringToFront(window) {
             windows.forEach(w => w.style.zIndex = '1');
             window.style.zIndex = '2';
+        }
+
+        // Start menu toggle
+        function toggleStartMenu() {
+            const startMenu = document.getElementById('start-menu');
+            if (startMenu.style.display === 'none') {
+                startMenu.style.display = 'block';
+            } else {
+                startMenu.style.display = 'none';
+            }
         }
 
         // Initialize windows with random positions
